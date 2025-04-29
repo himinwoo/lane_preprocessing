@@ -34,12 +34,33 @@ class LanePreprocessing:
 
     def process_image(self):
         """
-        이미지를 처리하여 차선을 감지
+        이미지를 처리하여 차선을 감지 (개선된 버전)
         """
-
-        # 그림자 제거 전처리
+        # 원본 이미지 확인
         cv2.imshow("original", self.img)
+        
+        # 그레이스케일 먼저 변환
+        gray = cv2.cvtColor(self.img, cv2.COLOR_BGR2GRAY)
+        cv2.imshow("1. gray", gray)
+        
+        # 블러 처리
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        cv2.imshow("2. blurred", blurred)
+        
+        # 대비 강화
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+        enhanced = clahe.apply(blurred)
+        cv2.imshow("3. enhanced", enhanced)
+        
+        # 다양한 C 값으로 이진화 시도
+        binary = cv2.adaptiveThreshold(enhanced, 255, cv2.ADAPTIVE_THRESH_MEAN_C, 
+                                    cv2.THRESH_BINARY_INV, 11, 5)
+        cv2.imshow("4. binary", binary)
+        
+        
+
         cv2.waitKey(1)
+
 
     def camCB(self, msg):
         """
