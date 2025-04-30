@@ -52,7 +52,7 @@ class LanePreprocessing:
         enhanced = clahe.apply(blurred)
         cv2.imshow("3. enhanced", enhanced)
         
-        # 다양한 C 값으로 이진화 시도
+        # 이진화
         binary = cv2.adaptiveThreshold(enhanced, 255, cv2.ADAPTIVE_THRESH_MEAN_C, 
                                     cv2.THRESH_BINARY_INV, 11, 5)
         cv2.imshow("4. binary", binary)
